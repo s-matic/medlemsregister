@@ -18,6 +18,8 @@ Route::get('/', function () {
 Route::auth();
 
 Route::get('/home', 'HomeController@index');
+Route::get('/setup/organization', 'OrganizationController@create');
+Route::post('/setup/organization', 'OrganizationController@store');
 
 Route::group(['middleware' => ['auth', 'requireOrg']], function () {
     Route::resource('member', 'MemberController');
