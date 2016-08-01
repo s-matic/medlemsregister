@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -15,7 +16,8 @@ class MemberController extends Controller
      */
     public function index()
     {
-        //
+        $members = new Collection();
+        return view('member.index', compact('members'));
     }
 
     /**
@@ -25,7 +27,7 @@ class MemberController extends Controller
      */
     public function create()
     {
-        //
+        return view('member.create');
     }
 
     /**
