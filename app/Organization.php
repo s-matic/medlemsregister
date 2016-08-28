@@ -7,6 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Organization extends Model
 {
     /**
+     * Get the value of the model's route key.
+     *
+     * @return mixed
+     */
+    public function getRouteKey()
+    {
+        return Hashids::encode($this->getKey());
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
