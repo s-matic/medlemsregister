@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Child;
+use App\Fee;
+use App\Member;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Validator;
 
 class MemberController extends Controller
 {
@@ -14,9 +18,9 @@ class MemberController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $members = new Collection();
+        $members = $request->user()->organization->members;
         return view('member.index', compact('members'));
     }
 
@@ -38,18 +42,121 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       $this->validate($request, [
+           'first_name'     => 'required',
+           'last_name'      => 'required',
+           'date_of_birth'  => 'required',
+           'address'        => 'required',
+           'postal_code'    => 'required',
+           'city'           => 'required',
+           'telephone'      => 'required',
+           'email'          => 'required'
+       ]);
+
+        $member = new Member([
+            'first_name'     => $request->first_name,
+            'last_name'      => $request->last_name,
+            'date_of_birth'  => $request->date_of_birth,
+            'address'        => $request->address,
+            'postal_code'    => $request->postal_code,
+            'city'           => $request->city,
+            'telephone'      => $request->telephone,
+            'email'          => $request->email,
+            'interests'      => serialize($request->interests),
+            'membership'     => max($request->membership)
+        ]);
+
+        if(!$member->save())
+        {
+            flash('Ett fel uppstod, medlemmen kunde inte registreras.', 'danger');
+            return redirect()->back();
+        }
+
+        $member->organization_id = $request->user()->organization_id;
+        $member->number = count($request->user()->organization->members) + 1;
+        $member->save();
+        $parents[1] = $member->id;
+
+        //Create fee
+        $fee = new Fee([
+            'member_id' => $member->id,
+            'year' => date('Y'),
+            'paid' => false
+        ]);
+        $fee->save();
+
+        //If second person exists then validate and create second member
+        if($request->first_name_2 != null)
+        {
+            $validator = Validator::make($request->all(), [
+                'first_name_2'     => 'required',
+                'last_name_2'      => 'required',
+                'date_of_birth_2'  => 'required',
+                'telephone_2'      => 'required',
+                'email_2'          => 'required'
+            ]);
+
+            if (!$validator->fails())
+            {
+                $member = new Member([
+                    'first_name'     => $request->first_name_2,
+                    'last_name'      => $request->last_name_2,
+                    'date_of_birth'  => $request->date_of_birth_2,
+                    'address'        => $request->address,
+                    'postal_code'    => $request->postal_code,
+                    'city'           => $request->city,
+                    'telephone'      => $request->telephone_2,
+                    'email'          => $request->email_2,
+                    'interests'      => serialize($request->interests),
+                    'membership'     => max($request->membership)
+                ]);
+
+                $member->organization_id = $request->user()->organization_id;
+                $member->number = count($request->user()->organization->members) + 1;
+                $member->save();
+                $parents[2] = $member->id;
+
+                //Create fee
+                $fee = new Fee([
+                    'member_id' => $member->id,
+                    'year' => date('Y'),
+                    'paid' => false
+                ]);
+                $fee->save();
+            }
+
+        }
+
+        //Add children
+        foreach ($request->child_first_name as $key => $child_first_name)
+        {
+            if($request->child_first_name[$key] && $request->child_last_name[$key] && $request->child_date_of_birth[$key])
+            {
+                $data = [
+                    'first_name'        => $request->child_first_name[$key],
+                    'last_name'         => $request->child_last_name[$key],
+                    'date_of_birth'     => $request->child_date_of_birth[$key],
+                    'first_parent_id'   => $parents[1],
+                    'second_parent_id'  => $parents[2],
+                ];
+                $child = new Child($data);
+                $child->save();
+            }
+        }
+
+        flash('Formuläret har sparats!', 'success');
+        return redirect('member');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param Member $member
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Member $member)
     {
-        //
+        return view('member.edit', compact('member'));
     }
 
     /**
@@ -84,5 +191,10 @@ class MemberController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function createPrintable()
+    {
+
     }
 }
