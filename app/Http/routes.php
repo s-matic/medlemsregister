@@ -27,6 +27,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('form', function () {
+    return view('welcome');
+});
+
 Route::auth();
 
 Route::group(['middleware' => 'auth'], function () {

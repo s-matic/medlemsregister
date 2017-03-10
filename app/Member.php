@@ -23,7 +23,7 @@ class Member extends Model
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'date_of_birth', 'address', 'postal_code', 'city', 'telephone', 'email', 'number', 'membership', 'interests'
+        'first_name', 'last_name', 'personnummer', 'address', 'postal_code', 'city', 'telephone', 'email', 'number', 'membership', 'interests', 'familiy_id', 'organization_id'
     ];
 
     /*

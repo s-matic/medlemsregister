@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Child;
 use App\Fee;
 use App\Member;
+use App\Family;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
@@ -53,17 +54,26 @@ class MemberController extends Controller
            'email'          => 'required'
        ]);
 
+        $family = new Family([
+            'name'           => $request->last_name,
+            'address'        => $request->address,
+            'postal_code'    => $request->postal_code,
+            'city'           => $request->city
+        ]);
+        $family->save();
+
         $member = new Member([
             'first_name'     => $request->first_name,
             'last_name'      => $request->last_name,
-            'date_of_birth'  => $request->date_of_birth,
+            'personnummer'   => $request->date_of_birth,
             'address'        => $request->address,
             'postal_code'    => $request->postal_code,
             'city'           => $request->city,
             'telephone'      => $request->telephone,
             'email'          => $request->email,
             'interests'      => serialize($request->interests),
-            'membership'     => max($request->membership)
+            'membership'     => max($request->membership),
+            'familiy_id'     => $family->id
         ]);
 
         if(!$member->save())
@@ -73,9 +83,7 @@ class MemberController extends Controller
         }
 
         $member->organization_id = $request->user()->organization_id;
-        $member->number = count($request->user()->organization->members) + 1;
         $member->save();
-        $parents[1] = $member->id;
 
         //Create fee
         $fee = new Fee([
@@ -101,20 +109,19 @@ class MemberController extends Controller
                 $member = new Member([
                     'first_name'     => $request->first_name_2,
                     'last_name'      => $request->last_name_2,
-                    'date_of_birth'  => $request->date_of_birth_2,
+                    'personnummer'   => $request->date_of_birth_2,
                     'address'        => $request->address,
                     'postal_code'    => $request->postal_code,
                     'city'           => $request->city,
                     'telephone'      => $request->telephone_2,
                     'email'          => $request->email_2,
                     'interests'      => serialize($request->interests),
-                    'membership'     => max($request->membership)
+                    'membership'     => max($request->membership),
+                    'familiy_id'     => $family->id
                 ]);
 
                 $member->organization_id = $request->user()->organization_id;
-                $member->number = count($request->user()->organization->members) + 1;
                 $member->save();
-                $parents[2] = $member->id;
 
                 //Create fee
                 $fee = new Fee([
@@ -133,13 +140,18 @@ class MemberController extends Controller
             if($request->child_first_name[$key] && $request->child_last_name[$key] && $request->child_date_of_birth[$key])
             {
                 $data = [
-                    'first_name'        => $request->child_first_name[$key],
-                    'last_name'         => $request->child_last_name[$key],
-                    'date_of_birth'     => $request->child_date_of_birth[$key],
-                    'first_parent_id'   => $parents[1],
-                    'second_parent_id'  => $parents[2],
+                    'first_name'     => $request->child_first_name[$key],
+                    'last_name'      => $request->child_last_name[$key],
+                    'personnummer'   => $request->child_date_of_birth[$key],
+                    'address'        => $request->address,
+                    'postal_code'    => $request->postal_code,
+                    'city'           => $request->city,
+                    'interests'      => serialize($request->interests),
+                    'membership'     => max($request->membership),
+                    'organization_id' => $request->user()->organization_id,
+                    'familiy_id'     => $family->id
                 ];
-                $child = new Child($data);
+                $child = new Member($data);
                 $child->save();
             }
         }
