@@ -34,7 +34,7 @@
                         <form class="grid-form" method="POST" action="{{ url('member') }}">
                             {{ csrf_field() }}
                             <fieldset style="margin-top: 5px;">
-                                <legend style="text-align: center; border-bottom: none; padding-bottom: 2px; margin-bottom: 0;">Срспко Удружење Солна</legend>
+                                <legend style="text-align: center; border-bottom: none; padding-bottom: 2px; margin-bottom: 0;">Српско удружење Солна</legend>
                                 <legend style="text-align: center;">Medlemsansökan för Serbiska föreningen Solna</legend>
                                 <div data-row-span="4">
                                     <div data-field-span="1" style="">
@@ -274,7 +274,15 @@
                                 <br>
                                  <fieldset>
                                     <legend>Avgifter</legend>
-                                    <div data-row-span="2">                             
+                                    <div data-row-span="4">                             
+                                        <div data-field-span="1">
+                                            <label>År</label>
+                                            <input type="text">
+                                        </div>
+                                        <div data-field-span="1">
+                                            <label>Betald</label>
+                                            <input type="text">
+                                        </div>       
                                         <div data-field-span="1">
                                             <label>År</label>
                                             <input type="text">
@@ -284,7 +292,15 @@
                                             <input type="text">
                                         </div>
                                     </div>
-                                    <div data-row-span="2">                             
+                                    <div data-row-span="4">                             
+                                        <div data-field-span="1">
+                                            <label>År</label>
+                                            <input type="text">
+                                        </div>
+                                        <div data-field-span="1">
+                                            <label>Betald</label>
+                                            <input type="text">
+                                        </div>                            
                                         <div data-field-span="1">
                                             <label>År</label>
                                             <input type="text">
@@ -294,7 +310,15 @@
                                             <input type="text">
                                         </div>
                                     </div>
-                                    <div data-row-span="2">                             
+                                    <div data-row-span="4">                             
+                                        <div data-field-span="1">
+                                            <label>År</label>
+                                            <input type="text">
+                                        </div>
+                                        <div data-field-span="1">
+                                            <label>Betald</label>
+                                            <input type="text">
+                                        </div>                            
                                         <div data-field-span="1">
                                             <label>År</label>
                                             <input type="text">
@@ -304,7 +328,33 @@
                                             <input type="text">
                                         </div>
                                     </div>
-                                    <div data-row-span="2">                             
+                                    <div data-row-span="4">                             
+                                        <div data-field-span="1">
+                                            <label>År</label>
+                                            <input type="text">
+                                        </div>
+                                        <div data-field-span="1">
+                                            <label>Betald</label>
+                                            <input type="text">
+                                        </div>                          
+                                        <div data-field-span="1">
+                                            <label>År</label>
+                                            <input type="text">
+                                        </div>
+                                        <div data-field-span="1">
+                                            <label>Betald</label>
+                                            <input type="text">
+                                        </div>
+                                    </div> 
+                                    <div data-row-span="4">                             
+                                        <div data-field-span="1">
+                                            <label>År</label>
+                                            <input type="text">
+                                        </div>
+                                        <div data-field-span="1">
+                                            <label>Betald</label>
+                                            <input type="text">
+                                        </div>                          
                                         <div data-field-span="1">
                                             <label>År</label>
                                             <input type="text">
